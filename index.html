@@ -31,21 +31,19 @@
           <span><i class="sw egl"></i>Energy line</span>
           <span><i class="sw hgl"></i>Hydraulic grade</span>
           <span><i class="sw water"></i>Water</span>
+          <span><i class="sw neg"></i>Below atmospheric</span>
         </div>
         <button type="button" id="fit" class="ghost">Fit to screen</button>
       </div>
       <div class="svg-wrap" id="svgWrap">
         <svg id="profile" role="img" aria-label="Long section of the pipe with energy and hydraulic grade lines"></svg>
         <div class="readout" id="readout" hidden></div>
+        <div class="ctxmenu" id="ctxmenu" role="menu" hidden></div>
       </div>
-      <p class="hint">Scroll or pinch to zoom along the length, drag to pan.</p>
+      <p class="hint">Scroll or pinch to zoom along the length, drag to pan. Right-click (or long-press) on the drawing to add a fitting or control at that point.</p>
     </section>
 
     <div class="panels">
-      <section class="panel" aria-labelledby="h-pipe">
-        <h2 id="h-pipe">Pipe</h2>
-        <div class="grid" id="pipeFields"></div>
-      </section>
       <section class="panel" aria-labelledby="h-flow">
         <h2 id="h-flow">Flow</h2>
         <div class="grid" id="flowFields"></div>
@@ -56,10 +54,35 @@
       </section>
     </div>
 
+    <section class="panel" aria-labelledby="h-pipe">
+      <div class="panel-head">
+        <h2 id="h-pipe">Sections <span class="sub-h">upstream to downstream</span></h2>
+        <button type="button" class="ghost" id="addSec">+ Add section upstream</button>
+      </div>
+      <div class="grid two" id="pipeFields"></div>
+      <div class="sections" id="sections"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="h-mk">
+      <div class="panel-head">
+        <h2 id="h-mk">Fittings and controls</h2>
+        <div class="add-row">
+          <button type="button" class="ghost" data-add="loss">+ Head loss (K)</button>
+          <button type="button" class="ghost" data-add="vent">+ Air vent</button>
+          <button type="button" class="ghost" data-add="orifice">+ Orifice</button>
+          <button type="button" class="ghost" data-add="gate">+ Gate</button>
+        </div>
+      </div>
+      <p class="sub muted" id="mkEmpty">None yet. Add one with the buttons, or right-click (long-press on a phone) on the long section.</p>
+      <div class="sections" id="markers"></div>
+    </section>
+
     <section class="panel results" aria-labelledby="h-res" aria-live="polite">
       <h2 id="h-res">Results</h2>
       <ul class="warnings" id="warnings"></ul>
       <div class="grid res" id="results"></div>
+      <h3>Sections</h3>
+      <div class="scroll"><table id="stable"></table></div>
       <details class="table-wrap">
         <summary>Profile table</summary>
         <div class="scroll"><table id="ptable"></table></div>
@@ -69,6 +92,7 @@
       <h2 id="h-fill">Partial flow (Manning)</h2>
       <p class="sub" id="fillSummary"></p>
       <div class="fill-controls">
+        <label>Section <select id="fillSec"></select></label>
         <label>Step <select id="fillStep"><option value="10">10%</option><option value="5">5%</option></select></label>
         <label>Flow <select id="fillQu"></select></label>
         <label>Velocity <select id="fillVu"></select></label>

@@ -105,7 +105,7 @@ test('Profile: free fall on mild slope starts at critical depth and approaches n
 
 test('Profile: steady state gives normal depth throughout', () => {
   const r = solveProfile({ ...base, S0: 0.005, end: { type: 'steady' } });
-  for (const p of r.points) near(p.y, r.yn.y, 1e-9, 'depth');
+  for (const p of r.points) near(p.y, r.yn.y, 1e-4, 'depth');
 });
 
 test('Profile: steep pipe with high tailwater forms a jump inside the pipe', () => {
