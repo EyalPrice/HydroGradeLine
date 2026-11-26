@@ -1,0 +1,135 @@
+:root {
+  --paper: #f6f4ee;
+  --card: #fffdf8;
+  --ink: #17233a;
+  --muted: #5d6779;
+  --rule: #dcd7ca;
+  --accent: #1f5fa8;
+  --pipe: #8b8f99;
+  --pipe-fill: #e4e1d8;
+  --water: rgba(52, 132, 214, 0.32);
+  --hgl: #1f6fd1;
+  --egl: #c8402e;
+  --ok: #2e8b57;
+  --low: #d8b31c;
+  --warn: #e07b16;
+  --bad: #c8302e;
+  --full: #6a4fb0;
+  --sub: #2f86c4;
+  --super: #d0641a;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161d;
+    --card: #1a1f28;
+    --ink: #e6e9ef;
+    --muted: #9aa3b2;
+    --rule: #2d3441;
+    --accent: #6aa8ef;
+    --pipe: #8d94a3;
+    --pipe-fill: #262c37;
+    --water: rgba(78, 158, 240, 0.35);
+    --hgl: #64a8f5;
+    --egl: #f07563;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.45 var(--sans);
+  padding-bottom: 72px;
+}
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; border-bottom: 1px solid var(--rule); background: var(--card);
+  position: sticky; top: 0; z-index: 5;
+}
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 18px; }
+.system { display: flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.system button { border: 0; background: transparent; color: var(--ink); padding: 6px 14px; font: inherit; cursor: pointer; }
+.system button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+main { max-width: 1400px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+
+.profile-card, .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; }
+.profile-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.profile-head h2 { margin: 0; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex: 1; flex-wrap: wrap; }
+.sw { display: inline-block; width: 18px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 2px solid; }
+.sw.egl { border-color: var(--egl); }
+.sw.hgl { border-color: var(--hgl); border-top-style: dashed; }
+.sw.water { height: 10px; border: 0; background: var(--water); }
+.ghost { border: 1px solid var(--rule); background: transparent; color: var(--ink); border-radius: 6px; padding: 5px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+
+.svg-wrap { position: relative; margin-top: 10px; touch-action: none; user-select: none; }
+#profile { width: 100%; height: clamp(240px, 42vh, 460px); display: block; cursor: grab; }
+#profile.dragging { cursor: grabbing; }
+#profile text { font: 11px var(--mono); fill: var(--muted); }
+.readout {
+  position: absolute; top: 8px; pointer-events: none; background: var(--card); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 6px 8px; font: 12px/1.4 var(--mono); white-space: pre; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.hint { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+
+.panels { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid { display: grid; gap: 10px; }
+.field { display: grid; gap: 4px; }
+.field > label { font-size: 13px; color: var(--muted); }
+.field .row { display: flex; gap: 6px; }
+.field input, .field select {
+  font: 14px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 7px 8px; min-width: 0;
+}
+.field input { flex: 1; }
+.field .row select { flex: 0 0 auto; width: 112px; }
+.field > select { width: 100%; }
+.field input:focus, .field select:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.field input[readonly] { background: transparent; }
+.field.hidden { display: none; }
+
+.results .res { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.result { border-left: 3px solid var(--rule); padding-left: 10px; }
+.result .val { font: 500 20px var(--mono); }
+.result.v-low { border-color: var(--low); }
+.result.v-ok { border-color: var(--ok); }
+.result.v-warn { border-color: var(--warn); }
+.result.v-bad { border-color: var(--bad); }
+.result .note { font-size: 12px; color: var(--muted); }
+.warnings { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; }
+.warnings li { background: color-mix(in srgb, var(--warn) 14%, transparent); border-left: 3px solid var(--warn); padding: 6px 10px; border-radius: 4px; font-size: 14px; }
+
+.table-wrap { margin-top: 14px; }
+.table-wrap summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; font: 12px var(--mono); margin-top: 8px; width: 100%; }
+th, td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { color: var(--muted); font-weight: 500; }
+
+.foot {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--rule);
+  padding: 6px 200px 6px 16px; font-size: 11px; color: var(--muted); z-index: 4;
+}
+.foot p { margin: 0; }
+.foot-line { display: flex; gap: 12px; }
+.linkish { background: none; border: 0; color: var(--accent); padding: 0; font: inherit; cursor: pointer; text-decoration: underline; }
+.disclaimer-link { display: none; }
+.coffee {
+  position: fixed; right: 14px; bottom: 10px; z-index: 6; background: #ffdd00; color: #1b1b1b; text-decoration: none;
+  font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+dialog { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); color: var(--ink); max-width: 420px; }
+
+@media (max-width: 700px) {
+  .disclaimer-full { display: none; }
+  .disclaimer-link { display: inline; }
+  .foot { padding-right: 180px; }
+  main { padding: 10px; }
+  #profile { height: 260px; }
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HydroGradeLine</title>
+  <meta name="description" content="Free hydraulic calculator for pipes and channels: velocity, head loss, Manning partial flow, critical depth and energy/hydraulic grade line profiles.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./" aria-label="HydroGradeLine home">
+      <img src="assets/logo.svg" alt="" width="32" height="32">
+      <span>HydroGradeLine</span>
+    </a>
+    <div class="system" role="group" aria-label="Unit system">
+      <button type="button" data-system="metric" aria-pressed="true">Metric</button>
+      <button type="button" data-system="us" aria-pressed="false">US</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="profile-card" aria-label="Long section">
+      <div class="profile-head">
+        <h2>Long section</h2>
+        <div class="legend" aria-hidden="true">
+          <span><i class="sw egl"></i>Energy line</span>
+          <span><i class="sw hgl"></i>Hydraulic grade</span>
+          <span><i class="sw water"></i>Water</span>
+        </div>
+        <button type="button" id="fit" class="ghost">Fit to screen</button>
+      </div>
+      <div class="svg-wrap" id="svgWrap">
+        <svg id="profile" role="img" aria-label="Long section of the pipe with energy and hydraulic grade lines"></svg>
+        <div class="readout" id="readout" hidden></div>
+      </div>
+      <p class="hint">Scroll or pinch to zoom along the length, drag to pan.</p>
+    </section>
+
+    <div class="panels">
+      <section class="panel" aria-labelledby="h-pipe">
+        <h2 id="h-pipe">Pipe</h2>
+        <div class="grid" id="pipeFields"></div>
+      </section>
+      <section class="panel" aria-labelledby="h-flow">
+        <h2 id="h-flow">Flow</h2>
+        <div class="grid" id="flowFields"></div>
+      </section>
+      <section class="panel" aria-labelledby="h-end">
+        <h2 id="h-end">Downstream end</h2>
+        <div class="grid" id="endFields"></div>
+      </section>
+    </div>
+
+    <section class="panel results" aria-labelledby="h-res" aria-live="polite">
+      <h2 id="h-res">Results</h2>
+      <ul class="warnings" id="warnings"></ul>
+      <div class="grid res" id="results"></div>
+      <details class="table-wrap">
+        <summary>Profile table</summary>
+        <div class="scroll"><table id="ptable"></table></div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="disclaimer-full">For guidance only. Results must be checked by a qualified engineer. Provided as is, without warranty. The author accepts no liability for any use of the results.</p>
+    <p class="foot-line">
+      <span>Built by Eyal Price © 2026</span>
+      <button type="button" class="linkish disclaimer-link" id="discBtn">Disclaimer</button>
+    </p>
+  </footer>
+
+  <a class="coffee" id="coffee" href="https://buymeacoffee.com/" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+
+  <dialog id="discDlg">
+    <p>For guidance only. Results must be checked by a qualified engineer. Provided as is, without warranty. The author accepts no liability for any use of the results.</p>
+    <form method="dialog"><button>Close</button></form>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
