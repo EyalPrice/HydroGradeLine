@@ -114,22 +114,23 @@ th { color: var(--muted); font-weight: 500; }
 
 .foot {
   position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--rule);
-  padding: 6px 200px 6px 16px; font-size: 11px; color: var(--muted); z-index: 4;
+  padding: 6px 150px 6px 16px; font-size: 11px; color: var(--muted); z-index: 4;
 }
 .foot p { margin: 0; }
 .foot-line { display: flex; gap: 12px; }
 .linkish { background: none; border: 0; color: var(--accent); padding: 0; font: inherit; cursor: pointer; text-decoration: underline; }
 .disclaimer-link { display: none; }
 .coffee {
-  position: fixed; right: 14px; bottom: 10px; z-index: 6; background: #ffdd00; color: #1b1b1b; text-decoration: none;
-  font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  position: fixed; right: 12px; bottom: 10px; z-index: 6; background: #ffdd00; color: #1b1b1b; text-decoration: none;
+  font-weight: 600; font-size: 12px; line-height: 1; padding: 6px 10px; border-radius: 999px;
 }
 dialog { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); color: var(--ink); max-width: 420px; }
 
 @media (max-width: 700px) {
   .disclaimer-full { display: none; }
   .disclaimer-link { display: inline; }
-  .foot { padding-right: 180px; }
+  .foot { padding-right: 140px; }
+  .coffee { bottom: 3px; }
   main { padding: 10px; }
   #profile { height: 260px; }
 }
