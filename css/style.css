@@ -134,3 +134,14 @@ dialog { border: 1px solid var(--rule); border-radius: 10px; background: var(--c
   main { padding: 10px; }
   #profile { height: 260px; }
 }
+
+/* partial flow table */
+.sub { margin: 0 0 10px; font-size: 14px; }
+.fill-controls { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); }
+.fill-controls select { font: 13px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 6px; margin-left: 4px; }
+#filltable tr.current td { background: color-mix(in srgb, var(--accent) 14%, transparent); font-weight: 500; }
+#filltable td.vb::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; background: var(--vb, transparent); }
+#filltable td.v-low { --vb: var(--low); }
+#filltable td.v-ok { --vb: var(--ok); }
+#filltable td.v-warn { --vb: var(--warn); }
+#filltable td.v-bad { --vb: var(--bad); }

@@ -1,5 +1,5 @@
 // HydroGradeLine – user interface
-import { MATERIALS, waterProps, G } from './hydraulics.js';
+import { MATERIALS, waterProps, G, fillingTable, normalDepth, froude, circle, Y_QMAX } from './hydraulics.js';
 import { solveProfile } from './profile.js';
 import { QUANTITIES, toSI, fromSI, defaultUnit, fmt } from './units.js';
 
@@ -237,6 +237,49 @@ function recompute() {
   }
   renderResults();
   draw();
+  renderFill();
+}
+
+// ---------------- Partial flow table ----------------
+const fillUnits = { flow: null, velocity: null, head: null };
+function fillSelects() {
+  for (const [id, q] of [['fillQu', 'flow'], ['fillVu', 'velocity'], ['fillYu', 'head']]) {
+    const sel = document.getElementById(id);
+    fillUnits[q] = defaultUnit(q, S.system);
+    sel.innerHTML = QUANTITIES[q].units.map(([u]) => `<option${u === fillUnits[q] ? ' selected' : ''}>${u}</option>`).join('');
+    sel.onchange = () => { fillUnits[q] = sel.value; renderFill(); };
+  }
+}
+document.getElementById('fillStep').addEventListener('change', () => renderFill());
+
+function renderFill() {
+  const t = document.getElementById('filltable');
+  const sum = document.getElementById('fillSummary');
+  if (S.fluid === 'air') { sum.textContent = 'Partial flow applies to liquids only.'; t.innerHTML = ''; return; }
+  if (!(S.S0 > 0) || !(S.D > 0) || !(S.n > 0)) { sum.textContent = 'Enter a slope greater than zero to see partial flow.'; t.innerHTML = ''; return; }
+  const qu = fillUnits.flow, vu = fillUnits.velocity, yu = fillUnits.head;
+  const step = +document.getElementById('fillStep').value;
+  const pcts = [];
+  for (let p = step; p < 100; p += step) pcts.push(p);
+  pcts.push(Y_QMAX * 100, 99.99);
+  const rows = fillingTable(S.D, S.n, S.S0, [...new Set(pcts)].sort((a, b) => a - b)).map((r) => ({ ...r, Fr: froude(r.Q, r.y, S.D) }));
+  const yn = normalDepth(S.Q, S.D, S.n, S.S0);
+  let cur = null;
+  if (yn && !yn.full) {
+    const A = circle(yn.y, S.D).A;
+    cur = { pct: (yn.y / S.D) * 100, y: yn.y, Q: S.Q, V: S.Q / A, Fr: froude(S.Q, yn.y, S.D), current: true };
+    rows.push(cur);
+    rows.sort((a, b) => a.pct - b.pct);
+    sum.textContent = `Your flow of ${fmt(fromSI('flow', qu, S.Q), 4)} ${qu} runs ${fmt(cur.pct, 3)}% full, at ${fmt(fromSI('velocity', vu, cur.V), 3)} ${vu} (${cur.Fr > 1 ? 'supercritical' : 'subcritical'}).`;
+  } else if (!yn) {
+    sum.textContent = 'Enter a flow greater than zero to place your flow in the table.';
+  } else {
+    sum.textContent = `Your flow of ${fmt(fromSI('flow', qu, S.Q), 4)} ${qu} exceeds the gravity capacity of ${fmt(fromSI('flow', qu, yn.Qmax), 4)} ${qu}; the pipe runs full.`;
+  }
+  t.innerHTML = `<thead><tr><th>Filling %</th><th>Depth (${yu})</th><th>Flow (${qu})</th><th>Velocity (${vu})</th><th>Froude</th></tr></thead><tbody>${rows.map((r) => {
+    const label = r.current ? `${fmt(r.pct, 3)} ← your flow` : Math.abs(r.pct - Y_QMAX * 100) < 1e-6 ? `${fmt(r.pct, 4)} (max flow)` : fmt(r.pct, 4);
+    return `<tr class="${r.current ? 'current' : ''}"><td>${label}</td><td>${fmt(fromSI('head', yu, r.y), 4)}</td><td>${fmt(fromSI('flow', qu, r.Q), 4)}</td><td class="vb ${vBand(r.V)[0]}">${fmt(fromSI('velocity', vu, r.V), 3)}</td><td>${fmt(r.Fr, 3)}</td></tr>`;
+  }).join('')}</tbody>`;
 }
 
 // ---------------- Long section drawing ----------------
@@ -391,11 +434,12 @@ for (const b of document.querySelectorAll('.system button')) {
     for (const x of document.querySelectorAll('.system button')) x.setAttribute('aria-pressed', x === b);
     for (const f of NUM) if (f.q) units[f.id] = defaultUnit(f.q, S.system);
     for (const d of RES) units['r-' + d.id] = defaultUnit(d.q, S.system);
-    buildInputs(); buildResults(); recompute();
+    buildInputs(); buildResults(); fillSelects(); recompute();
   });
 }
 document.getElementById('discBtn').addEventListener('click', () => document.getElementById('discDlg').showModal());
 
 buildInputs();
 buildResults();
+fillSelects();
 recompute();

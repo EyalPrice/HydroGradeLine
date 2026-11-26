@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   pipeFull, frictionFactor, circle, manningQ, normalDepth, criticalDepth, froude,
-  hwSlope, momentum, G,
+  hwSlope, momentum, G, fillingTable,
 } from '../js/hydraulics.js';
 import { solveProfile } from '../js/profile.js';
 import { toSI, fromSI } from '../js/units.js';
@@ -126,4 +126,14 @@ test('Units: 100 m³/h converts to 27.78 L/s', () => {
 test('Units: 10 in is 254 mm, 68 °F is 20 °C', () => {
   near(fromSI('diameter', 'mm', toSI('diameter', 'in', 10)), 254, 1e-9, 'diameter');
   near(toSI('temperature', '°F', 68), 20, 1e-9, 'temperature');
+});
+
+// Half-full circular pipe has half the area and the same hydraulic radius as full, so Q50 = Qfull / 2.
+test('Filling table: half-full flow is half of full-pipe Manning flow', () => {
+  const D = 0.5, n = 0.013, S = 0.004;
+  const rows = fillingTable(D, n, S, [50, 99.99]);
+  const Qfull = (Math.PI * D * D / 4) * (D / 4) ** (2 / 3) * Math.sqrt(S) / n;
+  near(rows[0].Q, Qfull / 2, 1e-9, 'half-full flow');
+  near(rows[1].Q, Qfull, 0.01, 'nearly full flow (slightly above full: the curve drops only at the crown)');
+  near(rows[0].V, Qfull / (Math.PI * D * D / 4), 1e-9, 'half-full velocity equals full velocity');
 });
